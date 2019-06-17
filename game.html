@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<style>
+    #container {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    * {
+        font-size: 14px;
+        font-family: monospace;
+    }
+</style>
+
+<body>
+    <div id="container">
+        <div id="design-wrap">
+        </div>
+    </div>
+
+    <script>
+        // Convert array into 2D array of rows of values
+        toMatrix = (arr, width) => arr.reduce((rows, key, index) => 
+        (index % width === 0) ? [...rows, [key]] : [...rows.slice(0,-1), [...rows[rows.length -1], key]], [])
+
+        // Generate row devider 
+        generateSeperator = (fieldLength,rowLength) => {
+            const rowCharacture = '-'
+            const columnCharacture = '+'
+            let seperator = columnCharacture
+            for (var i = 0; i < rowLength; i++) {
+                for (var f = 0; f < fieldLength; f++) {
+                    seperator += rowCharacture
+                }
+                seperator += columnCharacture
+            }
+            return seperator + '<br>'
+        }
+        // Create require spacing for each entry
+        createSpacing = (entrySpacer, spacing) => {
+            let spacer = ''
+            for(var i = 0; i < spacing; i++) {
+                spacer += entrySpacer
+            }
+            return spacer
+        }
+        // create data to be displayed
+        createChart = (values,rowLength) => {
+            const entrySeperator = '|'
+            const entrySpacer = '&nbsp;'
+            let displayText = ''
+            const dataSet = toMatrix(values, rowLength) // create array of rows
+            const fieldLength = (Math.max(...values)).toString().length // get length of longest number in array
+            // for each row
+            dataSet.forEach((row, index) => {
+                displayText += generateSeperator(fieldLength, rowLength) + entrySeperator
+                // for each entry in row
+                row.forEach((value, subindex) => {
+                    let spacing = fieldLength - value.toString().length
+                    displayText += createSpacing(entrySpacer, spacing)
+                    displayText += value + entrySeperator
+                })
+                displayText += '<br>'
+            })
+            displayText += generateSeperator(fieldLength, rowLength)
+
+            return displayText
+
+        }
+
+        const arrayData = [4, 35, 80, 123, 12345, 44, 8, 5, 2, 7, 9, 12];
+        const itemsPerRow = 4;
+        var divItem = document.getElementById("design-wrap")
+        divItem.innerHTML = createChart(arrayData,itemsPerRow)
+
+       
+
+        
+    </script>
+
+
+
+</body>
+
+</html>
